@@ -1,6 +1,9 @@
 from tkinter import *
+import ctypes
+
 
 window = Tk()
+ctypes.windll.shcore.SetProcessDpiAwareness(1)
 board = dict()
 turn = 'X'
 
@@ -65,6 +68,7 @@ def click(x, y):
         board[x+y].config(text = 'O')
         board[x+y]["state"] = DISABLED
         turn = 'X'
+    winner = 'No Winner'
     winner = checkwinner()
     if (winner == 0):
         print('X is winner')
@@ -76,13 +80,29 @@ ttt_label.pack()
 topframe = Frame(window)
 topframe.pack()
 
+
+
 boardframe = Frame(window)
 boardframe.pack(padx=5, pady=5)
 boardframe.pack()
-for column in range(3):
-    for row in range(3):
-        button = Button(boardframe, font=('orbitron',45,'bold'), width=3, text=' ',command= lambda x = str(column), y = str(row): click(x, y))
-        button.grid(row = row, column = column)
-        board[str(column)+str(row)] = button
+def board_creatioin():
+    for column in range(3):
+        for row in range(3):
+            button = Button(boardframe, font=('orbitron',45,'bold'), width=3, text=' ',command= lambda x = str(column), y = str(row): click(x, y))
+            button.grid(row = row, column = column)
+            board[str(column)+str(row)] = button
+board_creatioin()
+
+def desrtoy():
+    for column in range(3):
+        for row in range(3):
+            board[str(column)+str(row)].destroy()
+def restart():
+    desrtoy()
+    board_creatioin()
+
+restart_button = Button(topframe, text= 'Restart', command= restart)
+restart_button.pack()
+
 
 window.mainloop()
